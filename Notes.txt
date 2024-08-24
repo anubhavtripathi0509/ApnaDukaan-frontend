@@ -1,0 +1,17 @@
+product placement
+inventory management
+data driven decisions
+visual appeal-dashboard
+user manual
+
+ERP SOFTWARE -
+1.crud operation(product)
+2.billing system
+3.analysis
+4.page for orders
+5.payment integration
+
+
+https://youtu.be/ZIn36UmkEk8?si=46pUR3nJrpRvhJEH
+
+
