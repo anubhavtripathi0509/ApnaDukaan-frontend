@@ -1,39 +1,23 @@
 import React, { useState } from 'react';
 import { FaCamera, FaImage } from 'react-icons/fa';
 
-const AddClient = () => {
+const AddProduct = () => {
   const [formData, setFormData] = useState({
-    invoice_id: '00001',
-    invoice_date: '2024-08-09',
-    member_id: '21',
-    client_name: '',
-    contact_number: '',
-    alternate_contact: '',
-    email: '',
-    client_source: '',
-    joining_date: '2024-08-09',
-    package: '',
-    price: '0.00',
-    discount: '',
-    admission_charges: '0',
-    tax: 'No tax (0%)',
-    redeem_rewards: '0.00',
-    amount_payable: '0.00',
-    amount_paid: '',
-    payment_mode: 'Branch 1 Mode',
-    balance: '0.00',
-    client_representative: '',
-    appoint_trainer: '',
-    gender: '',
-    birthday: '',
-    anniversary: '',
-    profession: '',
-    tax_id: '',
-    workout_start: '',
-    workout_end: '',
-    address: '',
-    remarks: '',
-    profile_picture: null,
+    product_type: 'option1',
+    product_name: '',
+    product_id: '',
+    barcode_symbology: 'option1',
+    batch_id_concept: 'option1',
+    product_expiry: 'option1',
+    product_unit: '',
+    product_cost: '',
+    retail_price: '',
+    product_tax: 'option1',
+    tax_method: 'option1',
+    supplier: 'option1',
+    supplier_price: '',
+    tax: '',
+    tax_id: ''
   });
 
   const [image, setImage] = useState(null);
@@ -76,7 +60,7 @@ const AddClient = () => {
         formDataToSend.append(key, formData[key]);
       }
 
-      const response = await fetch('http://localhost:5000/add-client', {
+      const response = await fetch('http://localhost:5000/add-product', {
         method: 'POST',
         body: formDataToSend,
       });
@@ -126,9 +110,9 @@ const AddClient = () => {
             <label className="block text-gray-700">Product ID</label>
             <input
               type="text"
-              name="member_id"
+              name="product_id"
               className="border rounded w-full py-2 px-3"
-              value="Product ID"
+              value=""
               onChange={handleChange}
             />
           </div>
@@ -252,74 +236,6 @@ const AddClient = () => {
             />
           </div>
 
-          {/* <div>
-            <label className="block text-gray-700">Email</label>
-            <input
-              type="email"
-              name="email"
-              className="border rounded w-full py-2 px-3"
-              value={formData.email}
-              onChange={handleChange}
-            />
-          </div> */}
-
-          {/* <div>
-            <label className="block text-gray-700">Client Source</label>
-            <input
-              type="text"
-              name="client_source"
-              className="border rounded w-full py-2 px-3"
-              value={formData.client_source}
-              onChange={handleChange}
-            />
-          </div> */}
-
-         
-
-          {/* <div>
-            <label className="block text-gray-700">Package</label>
-            <input
-              type="text"
-              name="package"
-              className="border rounded w-full py-2 px-3"
-              value={formData.package}
-              onChange={handleChange}
-            />
-          </div> */}
-
-          {/* <div>
-            <label className="block text-gray-700">Price</label>
-            <input
-              type="text"
-              name="price"
-              className="border rounded w-full py-2 px-3"
-              value={formData.price}
-              onChange={handleChange}
-            />
-          </div> */}
-
-          {/* <div>
-            <label className="block text-gray-700">Discount</label>
-            <input
-              type="text"
-              name="discount"
-              className="border rounded w-full py-2 px-3"
-              value={formData.discount}
-              onChange={handleChange}
-            />
-          </div> */}
-
-          {/* <div>
-            <label className="block text-gray-700">Admission Charges</label>
-            <input
-              type="text"
-              name="admission_charges"
-              className="border rounded w-full py-2 px-3"
-              value={formData.admission_charges}
-              onChange={handleChange}
-            />
-          </div> */}
-
           <div>
             <label className="block text-gray-700">Tax</label>
             <input
@@ -331,98 +247,6 @@ const AddClient = () => {
             />
           </div>
 
-          {/* <div>
-            <label className="block text-gray-700">Redeem Rewards</label>
-            <input
-              type="text"
-              name="redeem_rewards"
-              className="border rounded w-full py-2 px-3"
-              value={formData.redeem_rewards}
-              onChange={handleChange}
-            />
-          </div> */}
-
-          {/* <div>
-            <label className="block text-gray-700">Amount Payable</label>
-            <input
-              type="text"
-              name="amount_payable"
-              className="border rounded w-full py-2 px-3"
-              value={formData.amount_payable}
-              onChange={handleChange}
-            />
-          </div> */}
-
-          {/* <div>
-            <label className="block text-gray-700">Amount Paid</label>
-            <input
-              type="text"
-              name="amount_paid"
-              className="border rounded w-full py-2 px-3"
-              value={formData.amount_paid}
-              onChange={handleChange}
-            />
-          </div> */}
-
-          {/* <div>
-            <label className="block text-gray-700">Payment Mode</label>
-            <input
-              type="text"
-              name="payment_mode"
-              className="border rounded w-full py-2 px-3"
-              value={formData.payment_mode}
-              onChange={handleChange}
-            />
-          </div> */}
-{/* 
-          <div>
-            <label className="block text-gray-700">Balance</label>
-            <input
-              type="text"
-              name="balance"
-              className="border rounded w-full py-2 px-3"
-              value={formData.balance}
-              onChange={handleChange}
-            />
-          </div> */}
-
-
-         
-
-          
-
-          {/* <div>
-            <label className="block text-gray-700">Birthday</label>
-            <input
-              type="date"
-              name="birthday"
-              className="border rounded w-full py-2 px-3"
-              value={formData.birthday}
-              onChange={handleChange}
-            />
-          </div> */}
-
-          {/* <div>
-            <label className="block text-gray-700">Anniversary</label>
-            <input
-              type="date"
-              name="anniversary"
-              className="border rounded w-full py-2 px-3"
-              value={formData.anniversary}
-              onChange={handleChange}
-            />
-          </div> */}
-
-          {/* <div>
-            <label className="block text-gray-700">Profession</label>
-            <input
-              type="text"
-              name="profession"
-              className="border rounded w-full py-2 px-3"
-              value={formData.profession}
-              onChange={handleChange}
-            />
-          </div> */}
 
           <div>
             <label className="block text-gray-700">Tax ID</label>
@@ -435,47 +259,6 @@ const AddClient = () => {
             />
           </div>
 
-          {/* <div>
-            <label className="block text-gray-700">Workout Start</label>
-            <input
-              type="time"
-              name="workout_start"
-              className="border rounded w-full py-2 px-3"
-              value={formData.workout_start}
-              onChange={handleChange}
-            />
-          </div> */}
-
-          {/* <div>
-            <label className="block text-gray-700">Workout End</label>
-            <input
-              type="time"
-              name="workout_end"
-              className="border rounded w-full py-2 px-3"
-              value={formData.workout_end}
-              onChange={handleChange}
-            />
-          </div> */}
-
-          {/* <div>
-            <label className="block text-gray-700">Address</label>
-            <textarea
-              name="address"
-              className="border rounded w-full py-2 px-3"
-              value={formData.address}
-              onChange={handleChange}
-            />
-          </div> */}
-
-          {/* <div>
-            <label className="block text-gray-700">Remarks</label>
-            <textarea
-              name="remarks"
-              className="border rounded w-full py-2 px-3"
-              value={formData.remarks}
-              onChange={handleChange}
-            />
-          </div> */}
 
           <div className="col-span-2">
             <label className="block text-gray-700">Product Picture</label>
@@ -519,4 +302,4 @@ const AddClient = () => {
   );
 };
 
-export default AddClient;
+export default AddProduct;
