@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FaCamera, FaImage } from 'react-icons/fa';
+import axios from 'axios';
 
 const AddProduct = () => {
   const [formData, setFormData] = useState({
@@ -48,34 +49,53 @@ const AddProduct = () => {
 
   const handleCaptureClick = () => {
     alert("Capture functionality not implemented yet.");
-    // You can add your image capturing logic here.
   };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
       const formDataToSend = new FormData();
       for (const key in formData) {
         formDataToSend.append(key, formData[key]);
       }
-
+  
       const response = await fetch('http://localhost:5000/add-product', {
         method: 'POST',
         body: formDataToSend,
       });
-
+  
       if (response.ok) {
-        alert('Client added successfully!');
-        // Optionally, reset the form or redirect to another page
+        alert('Product added successfully!');
+        // Reset form fields
+        setFormData({
+          product_type: 'option1',
+          product_name: '',
+          product_id: '',
+          barcode_symbology: 'option1',
+          batch_id_concept: 'option1',
+          product_expiry: 'option1',
+          product_unit: '',
+          product_cost: '',
+          retail_price: '',
+          product_tax: 'option1',
+          tax_method: 'option1',
+          supplier: 'option1',
+          supplier_price: '',
+          tax: '',
+          tax_id: ''
+        });
+        setImage(null); // Clear the image
       } else {
-        alert('Failed to add client.');
+        alert('Failed to add product.');
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('An error occurred while adding the client.');
+      alert('An error occurred while adding the product.');
     }
   };
+  
 
   return (
     <div className="p-4 bg-blue-50 min-h-screen">
@@ -84,24 +104,27 @@ const AddProduct = () => {
       </div>
       <div className="bg-white p-4 rounded-b-lg shadow-lg">
         <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
-          {/* Existing Fields */}
           <div>
             <label className="block text-gray-700">Product Type</label>
-            
-               <select id="preselectedDropdown" name="options" className="border rounded w-full py-2 px-3">
-                  <option value="option1" selected>Standard</option>
-                  <option value="option2" >Configurable</option>
-                  <option value="option3">Serialized</option>
-                </select>
+            <select 
+              name="product_type" 
+              className="border rounded w-full py-2 px-3"
+              value={formData.product_type}
+              onChange={handleChange}
+            >
+              <option value="option1">Standard</option>
+              <option value="option2">Configurable</option>
+              <option value="option3">Serialized</option>
+            </select>
           </div>
 
           <div>
             <label className="block text-gray-700">Product Name</label>
             <input
               type="text"
-              name="Product Name"
+              name="product_name"
               className="border rounded w-full py-2 px-3"
-              value="Product Name"
+              value={formData.product_name}
               onChange={handleChange}
             />
           </div>
@@ -112,118 +135,136 @@ const AddProduct = () => {
               type="text"
               name="product_id"
               className="border rounded w-full py-2 px-3"
-              value=""
+              value={formData.product_id}
               onChange={handleChange}
             />
           </div>
 
           <div>
             <label className="block text-gray-700">Barcode Symbology</label>
-            
-               <select id="preselectedDropdown" name="options" className="border rounded w-full py-2 px-3">
-                  <option value="option1" selected>code39</option>
-                  <option value="option2" >Code 128</option>
-                  <option value="option3">QR Code</option>
-                  <option value="option3">UPC</option>
-
-                </select>
+            <select 
+              name="barcode_symbology" 
+              className="border rounded w-full py-2 px-3"
+              value={formData.barcode_symbology}
+              onChange={handleChange}
+            >
+              <option value="option1">code39</option>
+              <option value="option2">Code 128</option>
+              <option value="option3">QR Code</option>
+              <option value="option4">UPC</option>
+            </select>
           </div>
 
           <div>
             <label className="block text-gray-700">Batch Id Concept</label>
-               <select id="preselectedDropdown" name="options" className="border rounded w-full py-2 px-3">
-                  <option value="option1" selected>Disable</option>
-                  <option value="option2" >Enable</option>
-                </select>
+            <select 
+              name="batch_id_concept" 
+              className="border rounded w-full py-2 px-3"
+              value={formData.batch_id_concept}
+              onChange={handleChange}
+            >
+              <option value="option1">Disable</option>
+              <option value="option2">Enable</option>
+            </select>
           </div>
 
           <div>
             <label className="block text-gray-700">Product Expiry</label>
-               <select id="preselectedDropdown" name="options" className="border rounded w-full py-2 px-3">
-                  <option value="option1" selected>Disable</option>
-                  <option value="option2" >Enable</option>
-                </select>
+            <input 
+              type="date" 
+              name="product_expiry" 
+              className="border rounded w-full py-2 px-3"
+              value={formData.product_expiry} 
+              onChange={handleChange} 
+            />
           </div>
+
           <div>
             <label className="block text-gray-700">Product Unit</label>
             <input
               type="text"
-              name="Product_Unit"
+              name="product_unit"
               className="border rounded w-full py-2 px-3"
-              value="Product Unit"
+              value={formData.product_unit}
               onChange={handleChange}
             />
           </div>
 
           <div>
-            <label className="block text-gray-700">Product Cost(In INR)</label>
+            <label className="block text-gray-700">Product Cost (In INR)</label>
             <input
               type="number"
               name="product_cost"
               className="border rounded w-full py-2 px-3"
-              value="0.00"
+              value={formData.product_cost}
               onChange={handleChange}
             />
           </div>
 
           <div>
-            <label className="block text-gray-700">Retail price(In INR)</label>
+            <label className="block text-gray-700">Retail price (In INR)</label>
             <input
               type="number"
               name="retail_price"
               className="border rounded w-full py-2 px-3"
-              value="0.00"
+              value={formData.retail_price}
               onChange={handleChange}
             />
           </div>
+
           <div>
             <label className="block text-gray-700">Product Tax</label>
-               <select id="preselectedDropdown" name="options" className="border rounded w-full py-2 px-3">
-                  <option value="option1" selected>No Tax</option>
-                  <option value="option2" >GST</option>
-                  <option value="option3" >Sales Tax</option>
-                  <option value="option4" >VAT</option>
-                  <option value="option5" >Local Tax</option>
-                  <option value="option6" >Import Dupy</option>
-
-
-                </select>
+            <select 
+              name="product_tax" 
+              className="border rounded w-full py-2 px-3"
+              value={formData.product_tax}
+              onChange={handleChange}
+            >
+              <option value="option1">No Tax</option>
+              <option value="option2">GST</option>
+              <option value="option3">Sales Tax</option>
+              <option value="option4">VAT</option>
+              <option value="option5">Local Tax</option>
+              <option value="option6">Import Duty</option>
+            </select>
           </div>
 
           <div>
             <label className="block text-gray-700">Tax Method</label>
-               <select id="preselectedDropdown" name="options" className="border rounded w-full py-2 px-3">
-                  <option value="option1" selected>Inclusive</option>
-                  <option value="option2" >Exclusive</option>
-                  <option value="option3" >Calculated Tax</option>
-                  <option value="option4" >Flat Rate Tax</option>
-                  <option value="option5" >Variable Tax</option>
-                  <option value="option6" >Compound Tax</option>
-                  <option value="option6" >Overriding Tax </option>
-                  
-
-
-                </select>
+            <select 
+              name="tax_method" 
+              className="border rounded w-full py-2 px-3"
+              value={formData.tax_method}
+              onChange={handleChange}
+            >
+              <option value="option1">Inclusive</option>
+              <option value="option2">Exclusive</option>
+              <option value="option3">Calculated Tax</option>
+              <option value="option4">Flat Rate Tax</option>
+              <option value="option5">Variable Tax</option>
+              <option value="option6">Compound Tax</option>
+              <option value="option7">Overriding Tax</option>
+            </select>
           </div>
 
           <div>
-            <label className="block text-gray-700">supplier</label>
-               <select id="preselectedDropdown" name="options" className="border rounded w-full py-2 px-3">
-                  <option value="option1" selected>Select Supplier</option>
-                  <option value="option2" >Component Suppliers</option>
-                  <option value="option3" >Service Providers</option>
-                  <option value="option4" >Wholesale Suppliers</option>
-                  <option value="option5" >Retail Suppliers</option>
-                  <option value="option6" >Secondary Suppliers</option>
-                  <option value="option6" >Global Suppliers </option>
-                  <option value="option6" >Local Suppliers </option>
-
-                  
-
-
-                </select>
+            <label className="block text-gray-700">Supplier</label>
+            <select 
+              name="supplier" 
+              className="border rounded w-full py-2 px-3"
+              value={formData.supplier}
+              onChange={handleChange}
+            >
+              <option value="option1">Select Supplier</option>
+              <option value="option2">Component Suppliers</option>
+              <option value="option3">Service Providers</option>
+              <option value="option4">Wholesale Suppliers</option>
+              <option value="option5">Retail Suppliers</option>
+              <option value="option6">Secondary Suppliers</option>
+              <option value="option7">Global Suppliers</option>
+              <option value="option8">Local Suppliers</option>
+            </select>
           </div>
-
 
           <div>
             <label className="block text-gray-700">Supplier Price</label>
@@ -231,7 +272,7 @@ const AddProduct = () => {
               type="text"
               name="supplier_price"
               className="border rounded w-full py-2 px-3"
-              value="Supplier Price"
+              value={formData.supplier_price}
               onChange={handleChange}
             />
           </div>
@@ -247,7 +288,6 @@ const AddProduct = () => {
             />
           </div>
 
-
           <div>
             <label className="block text-gray-700">Tax ID</label>
             <input
@@ -258,7 +298,6 @@ const AddProduct = () => {
               onChange={handleChange}
             />
           </div>
-
 
           <div className="col-span-2">
             <label className="block text-gray-700">Product Picture</label>
@@ -288,12 +327,12 @@ const AddProduct = () => {
             </div>
           </div>
 
-          <div className="col-span-2">
+          <div className="col-span-2 flex justify-end">
             <button
               type="submit"
-              className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-700"
+              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
             >
-              Save Product
+              Submit
             </button>
           </div>
         </form>

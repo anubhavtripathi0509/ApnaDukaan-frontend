@@ -3,7 +3,8 @@ import { FaEllipsisV } from 'react-icons/fa';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEnvelope,faAngleDown } from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope, faAngleDown } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
 
 const ProductTable = () => {
   const [products, setProducts] = useState([]);
@@ -40,17 +41,24 @@ const ProductTable = () => {
     setOpenDropdown(null);
   };
 
-  const handleDelete = (index) => {
-    // Handle delete logic here
-    console.log(`Product at index ${index} deleted`);
-    setOpenDropdown(null);
-  };
 
   const [dropDown, setDropDown] = useState(false);
 
   const navigate = useNavigate();
   const navigateToAddProd = () => {
     navigate('/add-product');
+  };
+
+  const deleteProduct = async (productId) => {
+    try {
+      await axios.delete(`http://localhost:5000/delete-product/${productId}`);
+      alert('Product deleted successfully!');
+      // Optionally, update the UI to reflect the deletion
+      // e.g., by fetching the updated list of products
+    } catch (error) {
+      console.error('Failed to delete product:', error);
+      alert('Failed to delete product.');
+    }
   };
 
   return (
@@ -77,7 +85,6 @@ const ProductTable = () => {
               Options
               <FontAwesomeIcon className="px-1 text-3xl font-bold text-white" icon={faAngleDown} />
           </h1>
-
         </div>
       </div>
       {dropDown && (
@@ -137,63 +144,41 @@ const ProductTable = () => {
             <tbody>
               {products.length > 0 ? (
                 products.map((product, index) => (
-                  <tr key={product.product_id}>
+                  <tr key={product.id}>
                     <td className="px-4 py-2 text-center">{index + 1}</td>
                     <td className="px-4 py-2 text-center">{product.product_id}</td>
-                    <td className="px-4 py-2 text-center">{/* Add product photo if available */}</td>
-                    <td className="px-4 py-2 text-center">{product.product_name}</td>
-                    <td className="px-4 py-2 text-center">{product.price}</td>
-                    <td className="px-4 py-2 text-center">{product.category}</td>
-                    <td className="px-4 py-2 text-center">{product.brand}</td>
-                    <td className="px-4 py-2 text-center">{product.stock_status}</td>
-                    <td className="px-4 py-2 text-center">{/* Add expiration date if applicable */}</td>
                     <td className="px-4 py-2 text-center">
-                      {/* Action Button */}
-                      <button
-                        ref={(el) => (dropdownButtonRefs.current[index] = el)}
-                        onClick={() => handleDropdownToggle(index)}
-                        className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-pink-500 text-white text-sm font-medium hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-pink-500"
-                      >
-                        Action <FaEllipsisV className="ml-2" />
-                      </button>
-                      {openDropdown === index && createPortal(
-                        <div
-                          ref={dropdownRef}
-                          className="absolute z-10 w-48 bg-white border border-gray-200 rounded-lg shadow-lg"
-                          style={{
-                            top: dropdownButtonRefs.current[index].getBoundingClientRect().bottom + window.scrollY,
-                            left: dropdownButtonRefs.current[index].getBoundingClientRect().left + window.scrollX,
-                          }}
-                        >
-                          <a
-                            onClick={() => handleStatusChange(index, 'Pending')}
-                            className="block px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
-                          >
-                            Pending
-                          </a>
-                          <a
-                            onClick={() => handleStatusChange(index, 'Done')}
-                            className="block px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
-                          >
-                            Done
-                          </a>
-                          <a
-                            onClick={() => handleDelete(index)}
-                            className="block px-4 py-2 text-red-600 hover:bg-red-100 cursor-pointer"
-                          >
-                            Delete
-                          </a>
-                        </div>,
-                        document.body
+                      {product.profile_picture && (
+                        <img
+                          src={`data:image/jpeg;base64,${product.profile_picture}`}
+                          alt={product.product_name}
+                          className="w-16 h-16 object-cover"
+                        />
                       )}
+                    </td>
+                    <td className="px-4 py-2 text-center">{product.product_name}</td>
+                    <td className="px-4 py-2 text-center">{product.product_cost}</td>
+                    <td className="px-4 py-2 text-center">{product.product_type}</td>
+                    <td className="px-4 py-2 text-center">{product.supplier}</td>
+                    <td className="px-4 py-2 text-center">{product.product_unit}</td>
+                    <td className="px-4 py-2 text-center">{product.product_expiry}</td>
+                    <td className="px-4 py-2 text-center">
+                      <div className="relative inline-block text-left">
+                        <div>
+                          <button
+                            ref={el => dropdownButtonRefs.current[index] = el}
+                            onClick={() => deleteProduct(product.id)}
+                            className="flex items-center px-4 py-2 text-sm font-medium text-red-500 hover:text-white hover:bg-red-500 rounded-xl">
+                            Delete
+                          </button>
+                        </div>
+                      </div>
                     </td>
                   </tr>
                 ))
               ) : (
-                <tr className="text-center">
-                  <td className="px-4 py-2" colSpan="10">
-                    No records found
-                  </td>
+                <tr>
+                  <td colSpan="10" className="px-4 py-2 text-center">No products available</td>
                 </tr>
               )}
             </tbody>
