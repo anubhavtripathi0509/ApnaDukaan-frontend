@@ -5,41 +5,34 @@ import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
+import { PRODUCTS_URL } from '../components/apiUrl';
+import { DELETE_PRODUCT_URL } from '../components/apiUrl';
 
 const ProductTable = () => {
   const [products, setProducts] = useState([]);
-  const [openDropdown, setOpenDropdown] = useState(null);
   const dropdownButtonRefs = useRef([]);
-  const dropdownRef = useRef(null);
+  const [Productloading, setProductLoading] = useState(false);
 
   // Fetch all products when the component mounts
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch('http://localhost:5000/products');
-        if (response.ok) {
-          const data = await response.json();
-          setProducts(data);
-        } else {
-          console.error('Failed to fetch products.');
-        }
-      } catch (error) {
-        console.error('Error:', error);
+  const fetchProducts = async () => {
+    setProductLoading(true);
+    try {
+      const response = await fetch(PRODUCTS_URL);
+      if (response.ok) {
+        const data = await response.json();
+        setProducts(data);
+      } else {
+        console.error('Failed to fetch products.');
       }
-    };
-
+    } catch (error) {
+      console.error('Error:', error);
+    }
+    setProductLoading(false);
+  };
+  useEffect(() => {
     fetchProducts();
   }, []);
 
-  const handleDropdownToggle = (index) => {
-    setOpenDropdown(openDropdown === index ? null : index);
-  };
-
-  const handleStatusChange = (index, status) => {
-    // Handle status change logic here
-    console.log(`Product at index ${index} changed status to ${status}`);
-    setOpenDropdown(null);
-  };
 
 
   const [dropDown, setDropDown] = useState(false);
@@ -51,10 +44,9 @@ const ProductTable = () => {
 
   const deleteProduct = async (productId) => {
     try {
-      await axios.delete(`http://localhost:5000/delete-product/${productId}`);
+      await axios.delete(`${DELETE_PRODUCT_URL}/${productId}`);
       alert('Product deleted successfully!');
-      // Optionally, update the UI to reflect the deletion
-      // e.g., by fetching the updated list of products
+      await fetchProducts();
     } catch (error) {
       console.error('Failed to delete product:', error);
       alert('Failed to delete product.');
@@ -98,6 +90,14 @@ const ProductTable = () => {
       <div className="bg-green-500 text-white p-4 rounded-t-lg">
         <h2 className="text-xl font-semibold">Product List</h2>
       </div>
+
+      {Productloading ? (
+        <div className="flex items-center justify-center h-screen">
+        <div className="relative">
+          <div className="border-gray-300 h-20 w-20 animate-spin rounded-full border-8 border-t-pink-500" />
+        </div>
+      </div>
+      ) : (
       <div className="bg-white p-4 rounded-b-lg shadow-lg">
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center space-x-4">
@@ -141,6 +141,7 @@ const ProductTable = () => {
                 <th className="px-4 py-2 text-left">Action</th>
               </tr>
             </thead>
+
             <tbody>
               {products.length > 0 ? (
                 products.map((product, index) => (
@@ -182,9 +183,11 @@ const ProductTable = () => {
                 </tr>
               )}
             </tbody>
+            
           </table>
         </div>
       </div>
+      )}
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FaCamera, FaImage } from 'react-icons/fa';
+import { ADD_PRODUCT_URL } from './apiUrl';
 import axios from 'axios';
 
 const AddProduct = () => {
@@ -22,6 +23,7 @@ const AddProduct = () => {
   });
 
   const [image, setImage] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -54,19 +56,40 @@ const AddProduct = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    
+    // Validation check
+    const requiredFields = [
+      'product_type', 'product_name', 'product_id', 'barcode_symbology',
+      'batch_id_concept', 'product_expiry', 'product_unit', 'product_cost',
+      'retail_price', 'product_tax', 'tax_method', 'supplier', 'supplier_price',
+      'tax', 'tax_id'
+    ];
+  
+    const isFormValid = requiredFields.every(field => formData[field] && formData[field].trim() !== '');
+  
+    if (!isFormValid) {
+      setLoading(false);
+      alert('Please fill out all required fields.');
+      return;
+    }
   
     try {
       const formDataToSend = new FormData();
       for (const key in formData) {
         formDataToSend.append(key, formData[key]);
       }
+      if (image) {
+        formDataToSend.append('profile_picture', image);
+      }
   
-      const response = await fetch('http://localhost:5000/add-product', {
+      const response = await fetch(ADD_PRODUCT_URL, {
         method: 'POST',
         body: formDataToSend,
       });
   
       if (response.ok) {
+        setLoading(false);
         alert('Product added successfully!');
         // Reset form fields
         setFormData({
@@ -94,7 +117,10 @@ const AddProduct = () => {
       console.error('Error:', error);
       alert('An error occurred while adding the product.');
     }
+  
+    setLoading(false);
   };
+  
   
 
   return (
@@ -102,6 +128,14 @@ const AddProduct = () => {
       <div className="bg-green-500 text-white p-4 rounded-t-lg">
         <h2 className="text-xl font-semibold">Create new Product</h2>
       </div>
+
+      {loading ? (
+        <div className="flex items-center justify-center h-screen">
+          <div className="relative">
+            <div class="border-gray-300 h-20 w-20 animate-spin rounded-full border-8 border-t-pink-500" />
+          </div>
+        </div>
+      ) : (
       <div className="bg-white p-4 rounded-b-lg shadow-lg">
         <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
           <div>
@@ -337,6 +371,7 @@ const AddProduct = () => {
           </div>
         </form>
       </div>
+      )}
     </div>
   );
 };
