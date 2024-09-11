@@ -5,18 +5,18 @@ import axios from 'axios';
 
 const AddProduct = () => {
   const [formData, setFormData] = useState({
-    product_type: 'option1',
+    product_type: '',
     product_name: '',
     product_id: '',
-    barcode_symbology: 'option1',
-    batch_id_concept: 'option1',
-    product_expiry: 'option1',
+    barcode_symbology: '',
+    batch_id_concept: '',
+    product_expiry: '',
     product_unit: '',
     product_cost: '',
     retail_price: '',
-    product_tax: 'option1',
-    tax_method: 'option1',
-    supplier: 'option1',
+    product_tax: '',
+    tax_method: '',
+    supplier: '',
     supplier_price: '',
     tax: '',
     tax_id: ''
@@ -93,18 +93,18 @@ const AddProduct = () => {
         alert('Product added successfully!');
         // Reset form fields
         setFormData({
-          product_type: 'option1',
+          product_type: '',
           product_name: '',
           product_id: '',
-          barcode_symbology: 'option1',
-          batch_id_concept: 'option1',
-          product_expiry: 'option1',
+          barcode_symbology: '',
+          batch_id_concept: '',
+          product_expiry: '',
           product_unit: '',
           product_cost: '',
           retail_price: '',
-          product_tax: 'option1',
-          tax_method: 'option1',
-          supplier: 'option1',
+          product_tax: '',
+          tax_method: '',
+          supplier: '',
           supplier_price: '',
           tax: '',
           tax_id: ''
@@ -182,10 +182,10 @@ const AddProduct = () => {
               value={formData.barcode_symbology}
               onChange={handleChange}
             >
-              <option value="option1">code39</option>
-              <option value="option2">Code 128</option>
-              <option value="option3">QR Code</option>
-              <option value="option4">UPC</option>
+              <option value="code39">code39</option>
+              <option value="Code 128">Code 128</option>
+              <option value="QR Code">QR Code</option>
+              <option value="UPC">UPC</option>
             </select>
           </div>
 
@@ -197,8 +197,8 @@ const AddProduct = () => {
               value={formData.batch_id_concept}
               onChange={handleChange}
             >
-              <option value="option1">Disable</option>
-              <option value="option2">Enable</option>
+              <option value="Disable">Disable</option>
+              <option value="Enable">Enable</option>
             </select>
           </div>
 
@@ -254,12 +254,12 @@ const AddProduct = () => {
               value={formData.product_tax}
               onChange={handleChange}
             >
-              <option value="option1">No Tax</option>
-              <option value="option2">GST</option>
-              <option value="option3">Sales Tax</option>
-              <option value="option4">VAT</option>
-              <option value="option5">Local Tax</option>
-              <option value="option6">Import Duty</option>
+              <option value="No Tax">No Tax</option>
+              <option value="GST">GST</option>
+              <option value="Sales Tax">Sales Tax</option>
+              <option value="VAT">VAT</option>
+              <option value="Local Tax">Local Tax</option>
+              <option value="Import Duty">Import Duty</option>
             </select>
           </div>
 
@@ -271,13 +271,15 @@ const AddProduct = () => {
               value={formData.tax_method}
               onChange={handleChange}
             >
-              <option value="option1">Inclusive</option>
-              <option value="option2">Exclusive</option>
-              <option value="option3">Calculated Tax</option>
-              <option value="option4">Flat Rate Tax</option>
-              <option value="option5">Variable Tax</option>
-              <option value="option6">Compound Tax</option>
-              <option value="option7">Overriding Tax</option>
+              <select>
+                <option value="inclusive">Inclusive</option>
+                <option value="exclusive">Exclusive</option>
+                <option value="calculated">Calculated Tax</option>
+                <option value="flat-rate">Flat Rate Tax</option>
+                <option value="variable">Variable Tax</option>
+                <option value="compound">Compound Tax</option>
+                <option value="overriding">Overriding Tax</option>
+              </select>
             </select>
           </div>
 
@@ -289,14 +291,14 @@ const AddProduct = () => {
               value={formData.supplier}
               onChange={handleChange}
             >
-              <option value="option1">Select Supplier</option>
-              <option value="option2">Component Suppliers</option>
-              <option value="option3">Service Providers</option>
-              <option value="option4">Wholesale Suppliers</option>
-              <option value="option5">Retail Suppliers</option>
-              <option value="option6">Secondary Suppliers</option>
-              <option value="option7">Global Suppliers</option>
-              <option value="option8">Local Suppliers</option>
+              <option value="select">Select Supplier</option>
+              <option value="component-suppliers">Component Suppliers</option>
+              <option value="service-providers">Service Providers</option>
+              <option value="wholesale-suppliers">Wholesale Suppliers</option>
+              <option value="retail-suppliers">Retail Suppliers</option>
+              <option value="secondary-suppliers">Secondary Suppliers</option>
+              <option value="global-suppliers">Global Suppliers</option>
+              <option value="local-suppliers">Local Suppliers</option>
             </select>
           </div>
 

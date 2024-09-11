@@ -79,7 +79,7 @@ const StockManagementPage = () => {
             type='text'
             placeholder='Search the product...'
           />
-          <button className='text-white font-bold p-2 my-2 text-lg bg-pink-500 rounded-xl'>Search</button>
+          {/* <button className='text-white font-bold p-2 my-2 text-lg bg-pink-500 rounded-xl'>Search</button> */}
         </div>
 
         <div className='cursor-pointer text-center mt-5 flex'>
