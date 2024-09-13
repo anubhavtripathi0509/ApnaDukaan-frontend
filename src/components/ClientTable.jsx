@@ -18,6 +18,7 @@ const ProductTable = () => {
     setLoading(true);
     try {
       const response = await axios.get(PRODUCTS_URL);
+      console.log(response.data);
       if (response.status === 200) {
         setProducts(response.data);
         setFilteredProducts(response.data);

@@ -7,7 +7,7 @@ const AddProduct = () => {
   const [formData, setFormData] = useState({
     product_type: '',
     product_name: '',
-    product_id: '',
+    product_id: 1,
     barcode_symbology: '',
     batch_id_concept: '',
     product_expiry: '',
@@ -15,7 +15,7 @@ const AddProduct = () => {
     product_cost: '',
     retail_price: '',
     product_tax: '',
-    tax_method: '',
+    tax_method: 'inclusive',
     supplier: '',
     supplier_price: '',
     tax: '',
@@ -27,11 +27,19 @@ const AddProduct = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+  
+    // Define which fields should be treated as integers
+    const integerFields = ['product_id', 'product_cost', 'retail_price', 'product_unit', 'supplier_price', 'tax_id'];
+    
+    // Convert the value to an integer if the field is listed in integerFields
+    const updatedValue = integerFields.includes(name) ? parseInt(value, 10) || '' : value;
+  
     setFormData({
       ...formData,
-      [name]: value,
+      [name]: updatedValue,
     });
   };
+  
 
   const handleFileChange = (e) => {
     setFormData({
@@ -57,16 +65,16 @@ const AddProduct = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
+  
     // Validation check
     const requiredFields = [
       'product_type', 'product_name', 'product_id', 'barcode_symbology',
       'batch_id_concept', 'product_expiry', 'product_unit', 'product_cost',
-      'retail_price', 'product_tax', 'tax_method', 'supplier', 'supplier_price',
+      'retail_price', 'product_tax', 'supplier', 'supplier_price',
       'tax', 'tax_id'
     ];
   
-    const isFormValid = requiredFields.every(field => formData[field] && formData[field].trim() !== '');
+    const isFormValid = requiredFields.every(field => formData[field] && formData[field].toString().trim() !== '');
   
     if (!isFormValid) {
       setLoading(false);
@@ -76,9 +84,18 @@ const AddProduct = () => {
   
     try {
       const formDataToSend = new FormData();
+  
+      // Convert integer fields to numbers
+      const integerFields = ['product_id', 'product_cost', 'retail_price', 'product_unit', 'supplier_price', 'tax_id'];
+  
       for (const key in formData) {
-        formDataToSend.append(key, formData[key]);
+        if (integerFields.includes(key)) {
+          formDataToSend.append(key, Number(formData[key])); // Convert to number
+        } else {
+          formDataToSend.append(key, formData[key]);
+        }
       }
+  
       if (image) {
         formDataToSend.append('profile_picture', image);
       }
@@ -103,7 +120,7 @@ const AddProduct = () => {
           product_cost: '',
           retail_price: '',
           product_tax: '',
-          tax_method: '',
+          tax_method: 'inclusive',
           supplier: '',
           supplier_price: '',
           tax: '',
@@ -120,6 +137,8 @@ const AddProduct = () => {
   
     setLoading(false);
   };
+  
+  
   
   
 
@@ -166,7 +185,7 @@ const AddProduct = () => {
           <div>
             <label className="block text-gray-700">Product ID</label>
             <input
-              type="text"
+              type="number"
               name="product_id"
               className="border rounded w-full py-2 px-3"
               value={formData.product_id}
@@ -216,7 +235,7 @@ const AddProduct = () => {
           <div>
             <label className="block text-gray-700">Product Unit</label>
             <input
-              type="text"
+              type="number"
               name="product_unit"
               className="border rounded w-full py-2 px-3"
               value={formData.product_unit}
@@ -249,7 +268,7 @@ const AddProduct = () => {
           <div>
             <label className="block text-gray-700">Product Tax</label>
             <select 
-              name="product_tax" 
+              name="product_tax"
               className="border rounded w-full py-2 px-3"
               value={formData.product_tax}
               onChange={handleChange}
@@ -271,7 +290,7 @@ const AddProduct = () => {
               value={formData.tax_method}
               onChange={handleChange}
             >
-              <select>
+              
                 <option value="inclusive">Inclusive</option>
                 <option value="exclusive">Exclusive</option>
                 <option value="calculated">Calculated Tax</option>
@@ -279,7 +298,7 @@ const AddProduct = () => {
                 <option value="variable">Variable Tax</option>
                 <option value="compound">Compound Tax</option>
                 <option value="overriding">Overriding Tax</option>
-              </select>
+          
             </select>
           </div>
 
@@ -305,7 +324,7 @@ const AddProduct = () => {
           <div>
             <label className="block text-gray-700">Supplier Price</label>
             <input
-              type="text"
+              type="number"
               name="supplier_price"
               className="border rounded w-full py-2 px-3"
               value={formData.supplier_price}
@@ -327,7 +346,7 @@ const AddProduct = () => {
           <div>
             <label className="block text-gray-700">Tax ID</label>
             <input
-              type="text"
+              type="number"
               name="tax_id"
               className="border rounded w-full py-2 px-3"
               value={formData.tax_id}

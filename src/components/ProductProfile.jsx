@@ -8,14 +8,14 @@ const ProductProfile = () => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const PRODUCTS_URL = `${API_BASE_URL}/product/${id}`; // Replace with actual product API URL
+  const PRODUCTS_URL = `${API_BASE_URL}/product/${id}`;
 
   useEffect(() => {
     const fetchProductDetails = async () => {
       setLoading(true);
       try {
         const response = await axios.get(PRODUCTS_URL);
-        console.log(response.data);  // Log the product data to debug
+        console.log(response.data);
         if (response.status === 200) {
           setProduct(response.data);
         } else {
@@ -40,15 +40,21 @@ const ProductProfile = () => {
 
   return (
     <div className="p-4 bg-blue-50 min-h-screen">
-
       {/* Product Profile Card */}
       <div className="bg-white rounded shadow p-6">
-
         {/* Profile Information */}
         <div className="flex space-x-8">
           {/* Left Section */}
           <div className="w-1/4 bg-green-500 text-center p-4 rounded">
-            <div className="bg-gray-200 p-4 rounded-full w-24 h-24 mx-auto"></div>
+            <div className="bg-gray-200 p-4 rounded-full w-24 h-24 mx-auto">
+              {product.profile_picture && (
+                <img
+                  src={`data:image/jpeg;base64,${product.profile_picture}`}
+                  alt={product.product_name}
+                  className="w-24 h-24 object-cover rounded-full"
+                />
+              )}
+            </div>
             <button className="mt-2 text-blue-700">Edit</button>
             <p className="text-white mt-4">In Stock</p>
             <h2 className="text-white font-bold text-lg mt-2">{product.product_name}</h2>
@@ -71,69 +77,77 @@ const ProductProfile = () => {
                 <label className="block">Product Name</label>
                 <input
                   type="text"
-                  value="Sample Product"
+                  value={product.product_name || ''}
                   className="block p-2 w-full rounded border border-gray-300"
+                  readOnly
                 />
               </div>
               <div>
                 <label className="block">Product ID</label>
                 <input
                   type="text"
-                  value="12345"
+                  value={product.product_id || ''}
                   className="block p-2 w-full rounded border border-gray-300"
+                  readOnly
                 />
               </div>
               <div>
                 <label className="block">Barcode Symbology</label>
                 <input
                   type="text"
-                  value="Code128"
+                  value={product.barcode_symbology || ''}
                   className="block p-2 w-full rounded border border-gray-300"
+                  readOnly
                 />
               </div>
               <div>
                 <label className="block">Batch ID Concept</label>
                 <input
                   type="text"
-                  value="Batch001"
+                  value={product.batch_id || ''}
                   className="block p-2 w-full rounded border border-gray-300"
+                  readOnly
                 />
               </div>
               <div>
                 <label className="block">Product Unit</label>
                 <input
                   type="text"
-                  value="Piece"
+                  value={product.product_unit || ''}
                   className="block p-2 w-full rounded border border-gray-300"
+                  readOnly
                 />
               </div>
               <div>
                 <label className="block">Product Cost</label>
                 <input
                   type="number"
-                  value="50"
+                  value={product.product_cost || 0}
                   className="block p-2 w-full rounded border border-gray-300"
+                  readOnly
                 />
               </div>
               <div>
                 <label className="block">Retail Price</label>
                 <input
                   type="number"
-                  value="75"
+                  value={product.retail_price || 0}
                   className="block p-2 w-full rounded border border-gray-300"
+                  readOnly
                 />
               </div>
               <div>
                 <label className="block">Product Tax</label>
                 <input
                   type="number"
-                  value="5"
+                  value={product.product_tax || 0}
                   className="block p-2 w-full rounded border border-gray-300"
+                  readOnly
                 />
               </div>
               <div>
                 <label className="block">Tax Method</label>
-                <select className="block p-2 w-full rounded border border-gray-300">
+                <select className="block p-2 w-full rounded border border-gray-300" value={product.tax_method || ''} disabled>
                   <option value="exclusive">Exclusive</option>
                   <option value="inclusive">Inclusive</option>
                 </select>
@@ -142,30 +156,35 @@ const ProductProfile = () => {
                 <label className="block">Supplier</label>
                 <input
                   type="text"
-                  value="Supplier A"
+                  value={product.supplier || ''}
                   className="block p-2 w-full rounded border border-gray-300"
+                  readOnly
                 />
               </div>
               <div>
                 <label className="block">Supplier Price</label>
                 <input
                   type="number"
-                  value="60"
+                  value={product.supplier_price || 0}
                   className="block p-2 w-full rounded border border-gray-300"
+                  readOnly
                 />
               </div>
               <div>
                 <label className="block">Tax</label>
                 <input
                   type="text"
-                  value="10%"
+                  value={product.tax || ''}
                   className="block p-2 w-full rounded border border-gray-300"
+                  readOnly
                 />
               </div>
               <div className="col-span-2">
                 <label className="block">Remarks</label>
                 <textarea
                   className="block p-2 w-full rounded border border-gray-300"
+                  value={product.remarks || ''}
+                  readOnly
                 ></textarea>
               </div>
             </div>
